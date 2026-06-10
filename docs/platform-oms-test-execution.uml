@@ -1,0 +1,104 @@
+@startuml oms-test-execution
+
+title HIL Test Execution Flow - OMS Board
+
+actor       "Developer"                     as Dev
+participant "OMS Repo\nGitHub"              as GH
+participant "OMS Repo CI\nGitHub Actions"   as CI
+participant "Artifactory"                   as ART
+participant "Raspberry Pi\nHIL Controller"  as RPi
+participant "OpenOCD\nSerial Debug Probe"   as OCD
+participant "MCP4922 DAC\n(SPI)"            as DAC
+participant "USB-CAN FD Adapter"            as CAN
+participant "OMS Board\n(DUT)"              as DUT
+
+== trigger ==
+
+Dev -> GH   : git push origin develop
+GH -> CI    : push event on develop via webhook
+CI -> CI    : build firmware ELF (CM7)
+CI -> ART   : upload ELF file with tag & commit SHA
+CI -> RPi   : notify new firmware available\nArtifactory URL + commit SHA
+RPi -> ART  : download ELF file
+ART --> RPi : ELF file
+
+== board fixture - setup ==
+
+RPi -> OCD  : openocd program ELF file verify reset
+OCD -> DUT  : flash ELF via SWD/JTAG
+OCD --> RPi : Verified OK
+
+RPi -> DAC  : set all analog outputs = 0 V ambient via SPI
+RPi -> RPi  : set all outputs = LOW via GPIO
+RPi -> CAN  : open can1 (FDCAN2) via flush queue
+
+RPi -> OCD  : openocd reset run
+OCD -> DUT  : execute from reset vector
+
+DUT -> CAN  : OMS board status 0x140A [periodic] via FDCAN2
+CAN --> RPi : recv 0x140A via board alive
+
+note over RPi : OMS alive confirmed
+
+== test body - token / flow control ==
+
+note over RPi,DUT : HIL impersonates Control Board on FDCAN2
+
+RPi -> CAN  : can1.send() via token request frame 0x1804
+CAN -> DUT  : token request 0x1804 via FDCAN2
+DUT -> CAN  : token grant frame 0x1403 via FDCAN2
+CAN --> RPi : recv_matching(0x1403, timeout=2s)
+RPi -> RPi  : assert token granted
+
+== test body - selector valve ==
+
+RPi -> CAN  : can1.send() via selector valve command frame 0x1800
+CAN -> DUT  : set selector valve 0x1800 via FDCAN2
+DUT -> CAN  : selector valve response frame 0x1400 via FDCAN2
+CAN --> RPi : recv_matching(0x1400, timeout=2s)
+RPi -> RPi  : assert valve position
+
+== test body - filter pump ==
+
+RPi -> CAN  : can1.send() via filter pump command frame 0x1802
+CAN -> DUT  : filter pump control 0x1802 via FDCAN2
+DUT -> CAN  : filter pump response frame 0x1401 via FDCAN2
+CAN --> RPi : recv_matching(0x1401, timeout=2s)
+RPi -> RPi  : assert pump state
+
+== test body - drain valve ==
+
+RPi -> CAN  : can1.send() via drain valve command frame 0x1801
+CAN -> DUT  : drain valve control 0x1801 via FDCAN2
+DUT -> CAN  : drain valve response frame 0x1402 via FDCAN2
+CAN --> RPi : recv_matching(0x1402, timeout=2s)
+RPi -> RPi  : assert drain valve state
+
+== test body - ADC / analog stimulus ==
+
+RPi -> DAC  : inject analog signal via SPI
+DAC -> DUT  : analog voltage via ADC input
+note over DUT : stimulus only (no immediate CAN response)
+DUT -> CAN  : telemetry frame via FDCAN2
+CAN --> RPi : recv_matching(telemetry COB-ID, timeout=2s)
+RPi -> RPi  : assert ADC reading within range
+
+== test body - token release ==
+
+RPi -> CAN  : can1.send() via token release frame 0x1805
+CAN -> DUT  : release control 0x1805 via FDCAN2
+DUT -> CAN  : token release ack frame 0x1404 via FDCAN2
+CAN --> RPi : recv_matching(0x1404, timeout=2s)
+RPi -> RPi  : assert token released
+
+== board fixture - teardown ==
+
+RPi -> RPi  : GPIO · all outputs → LOW
+RPi -> DAC  : all outputs → 0 V via SPI close
+RPi -> CAN  : can1 · close
+RPi -> OCD  : openocd reset run · leave board in reset
+
+RPi --> CI  : pytest-html + JUnit XML via exit code
+CI -> GH    : report results via pass/fail status on commit
+
+@enduml

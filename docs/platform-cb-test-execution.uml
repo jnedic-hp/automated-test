@@ -1,0 +1,70 @@
+@startuml cb-test-execution
+
+title HIL Test Execution Flow - Platform Control Board
+
+actor       "Developer"                     as Dev
+participant "CB Repo\nGitHub"               as GH
+participant "CB Repo CI\nGitHub Actions"    as CI
+participant "Artifactory"                   as ART
+participant "Raspberry Pi\nHIL Controller"  as RPi
+participant "OpenOCD\nSerial Debug Probe"   as OCD
+participant "MCP4922 DAC\n(SPI)"            as DAC
+participant "USB-CAN FD Adapter"            as CAN
+participant "Platform Control Board\n(DUT)" as DUT
+
+== trigger ==
+
+Dev -> GH   : git push origin develop
+GH -> CI    : push event on develop via webhook
+CI -> CI    : build firmware ELF (CM7)
+CI -> ART   : upload ELF file with tag & commit SHA
+CI -> RPi   : notify new firmware available\nArtifactory URL + commit SHA
+RPi -> ART  : download ELF file
+ART --> RPi : ELF file
+
+== board fixture - setup ==
+
+RPi -> OCD  : openocd program ELF file verify reset
+OCD -> DUT  : flash ELF via SWD/JTAG
+OCD --> RPi : Verified OK
+
+RPi -> DAC  : set all zones = 75 °F ambient via SPI
+RPi -> RPi  : set all interlock outputs = LOW via GPIO
+RPi -> CAN  : open can0 + can1 via flush queues
+
+RPi -> OCD  : openocd reset run
+OCD -> DUT  : execute from reset vector
+
+DUT -> CAN  : NMT heartbeat 0x701 [OPERATIONAL] via FDCAN1
+CAN --> RPi : recv 0x701 via state=0x05
+
+note over RPi : boot confirmed
+
+== test body ==
+
+RPi -> CAN  : can0.send() via command frame (OMS or HMI)
+CAN -> DUT  : FDCAN1 Line 0/1 via command COB-ID
+DUT -> CAN  : response frame via FDCAN1 Line 0/1
+CAN --> RPi : can0.recv_matching(response COB-ID, timeout=2s)
+RPi -> RPi  : assert field values
+
+RPi -> DAC  : set zone temperature via SPI
+DAC -> DUT  : analog voltage via ADC input
+note over DUT : stimulus only (no CAN response)
+
+RPi -> DUT  : assert interlock GPIO HIGH
+DUT -> CAN  : output command frame via FDCAN2 Line 1
+CAN --> RPi : can1.recv_matching(output COB-ID, timeout=2s)
+RPi -> RPi  : assert output field values
+
+== board fixture - teardown ==
+
+RPi -> RPi  : release_all() = LOW via GPIO
+RPi -> DAC  : close via SPI
+RPi -> CAN  : close can0 + can1
+RPi -> OCD  : openocd reset
+
+RPi --> CI  : pytest-html + JUnit XML
+CI -> GH    : report results via pass/fail status on commit
+
+@enduml
