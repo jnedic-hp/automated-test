@@ -14,14 +14,14 @@ from common.can_protocol import BoardVersionResponse, L0_HMI_COB_REQUEST_BOARD_V
 EXPECTED_VERSION = BoardVersionResponse(major=0, minor=2, patch=0)
 
 
-def test_control_board_version(can_iface) -> None:
-    can_iface.flush()
+def test_control_board_version(can_interface) -> None:
+    can_interface.flush()
 
     # Step 1: request version from Control Board
-    can_iface.send(encode_request_version())
+    can_interface.send(encode_request_version())
 
     # Step 2: wait for the version response TPDO
-    reply = can_iface.recv_matching(arbitration_id=L0_CB_COB_RECEIVED_BOARD_VERSION,
+    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB_RECEIVED_BOARD_VERSION,
                                     timeout_s=2.0,)
 
     # Step 3: decode and assert
