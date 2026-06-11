@@ -58,38 +58,32 @@ class SocketCanInterface:
         self._thread: Optional[threading.Thread] = None
 
     def open(self) -> None:
-        self._bus = can.Bus(
-            channel=self._channel,
-            interface="socketcan",
-            bitrate=self._bitrate,
-            data_bitrate=self._data_bitrate,
-            fd=True,
-        )
+        self._bus = can.Bus(channel=self._channel,
+                            interface="socketcan",
+                            bitrate=self._bitrate,
+                            data_bitrate=self._data_bitrate,
+                            fd=True,)
         self._stop.clear()
-        self._thread = threading.Thread(
-            target=self._listener, daemon=True, name=f"can-rx-{self._channel}"
-        )
+        self._thread = threading.Thread(target=self._listener,
+                                        daemon=True,
+                                        name=f"can-rx-{self._channel}")
         self._thread.start()
 
     def _listener(self) -> None:
         while not self._stop.is_set():
             raw = self._bus.recv(timeout=0.05)
             if raw is not None:
-                self._rx.put(CanMessage(
-                    arbitration_id=raw.arbitration_id,
-                    data=bytes(raw.data),
-                    is_fd=raw.is_fd,
-                    timestamp=raw.timestamp,
-                ))
+                self._rx.put(CanMessage(arbitration_id=raw.arbitration_id,
+                                        data=bytes(raw.data),
+                                        is_fd=raw.is_fd,
+                                        timestamp=raw.timestamp,))
 
     def send(self, msg: CanMessage) -> None:
         assert self._bus is not None, "call open() before send()"
-        self._bus.send(can.Message(
-            arbitration_id=msg.arbitration_id,
-            data=msg.data,
-            is_fd=msg.is_fd,
-            is_extended_id=False,
-        ))
+        self._bus.send(can.Message(arbitration_id=msg.arbitration_id,
+                                   data=msg.data,
+                                   is_fd=msg.is_fd,
+                                   is_extended_id=False,))
 
     def recv(self, timeout_s: float) -> Optional[CanMessage]:
         try:
