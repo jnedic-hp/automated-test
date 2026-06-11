@@ -17,8 +17,6 @@ jobs:
         run: pip3 install -r offtarget/requirements.txt pytest-html
 
       - name: Run off-target tests
-        env:
-          PYTHONPATH: ${{ github.workspace }}
         run: ./scripts/run_offtarget_tests.sh
 
       - name: Upload test results
