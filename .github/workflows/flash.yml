@@ -1,0 +1,17 @@
+name: Flash Firmware
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  flash:
+    runs-on: [self-hosted, linux, x64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Flash firmware to board
+        run: ./scripts/flash_firmware.sh boards/firmwares/test_ledon.elf
