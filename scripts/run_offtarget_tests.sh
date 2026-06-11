@@ -13,4 +13,4 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 mkdir -p results
-python -m pytest offtarget/tests/ -v --junitxml=results/offtarget-results.xml --html=results/offtarget-report.html --self-contained-html --css=assets/report.css "$@"
+python3 -m pytest offtarget/tests/ -v --junitxml=results/offtarget-results.xml --html=results/offtarget-report.html --self-contained-html --css=assets/report.css "$@"
