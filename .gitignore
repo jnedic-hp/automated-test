@@ -17,9 +17,10 @@ results/
 htmlcov/
 
 # Firmware binaries
-boards/firmwares/*.elf
-boards/firmwares/*.bin
-boards/firmwares/*.hex
+# Commented-out for the mean time to allow firmware binaries to be committed for testing purposes. These should be re-enabled before merging to main.
+# boards/firmwares/*.elf
+# boards/firmwares/*.bin
+# boards/firmwares/*.hex
 
 # OS
 .DS_Store
