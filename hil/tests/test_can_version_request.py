@@ -1,5 +1,5 @@
 """
-1_can_version_request.py — verify the firmware reports the expected version.
+test_can_version_request.py - verify the firmware reports the expected version.
 
 Given   the Control Board is running and connected over CAN FD
 When    the HIL sends a version-request RPDO
@@ -19,7 +19,7 @@ def test_control_board_version(can_interface) -> None:
 
     # Step 2: wait for the version response TPDO
     reply = can_interface.recv_matching(L0_CB_COB_RECEIVED_BOARD_VERSION,
-                                    2.0,)
+                                        2.0,)
 
     # Step 3: decode and assert
     version = BoardVersionResponse.from_can(reply)
