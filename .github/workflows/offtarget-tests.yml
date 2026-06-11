@@ -1,0 +1,29 @@
+name: Off-Target Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  offtarget:
+    runs-on: [self-hosted, linux, x64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pip install -r offtarget/requirements.txt pytest-html
+
+      - name: Run off-target tests
+        run: ./scripts/run_offtarget_tests.sh
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offtarget-results
+          path: |
+            results/offtarget-results.xml
+            results/offtarget-report.html
