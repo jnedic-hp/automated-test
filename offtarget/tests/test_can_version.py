@@ -7,7 +7,7 @@ Then    the decoded response matches the expected version constant
 """
 
 from common.can_interface import CanMessage
-from common.can_protocol import BoardVersionResponse, L0_HMI_COB_REQUEST_BOARD_VERSION, L0_CB_COB_RECEIVED_BOARD_VERSION, encode_request_version
+from common.can_protocol import BoardVersionResponse, L0_HMI_COB, L0_CB_COB, encode_request_version
 
 # Update whenever VersionDetails.md increments the version.
 # Current: 0.2 — "Split Vat 2 basket cook" (2025-05-02)
@@ -21,7 +21,7 @@ def test_control_board_version(can_interface) -> None:
     can_interface.send(encode_request_version())
 
     # Step 2: wait for the version response TPDO
-    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB_RECEIVED_BOARD_VERSION,
+    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB.RECEIVED_BOARD_VERSION,
                                     timeout_s=2.0,)
 
     # Step 3: decode and assert
@@ -35,7 +35,7 @@ def test_encode_version_request() -> None:
     msg = encode_request_version()
 
     # Then
-    assert msg.arbitration_id == L0_HMI_COB_REQUEST_BOARD_VERSION, (f"Wrong COB-ID: expected 0x{L0_HMI_COB_REQUEST_BOARD_VERSION:03X}, "
+    assert msg.arbitration_id == L0_HMI_COB.REQUEST_BOARD_VERSION, (f"Wrong COB-ID: expected 0x{L0_HMI_COB.REQUEST_BOARD_VERSION:03X}, "
                                                                 f"got 0x{msg.arbitration_id:03X}")
     assert len(msg.data) == 8, f"Payload must be 8 bytes, got {len(msg.data)}"
     assert msg.data == bytes(8), f"Payload must be all zeros, got {msg.data.hex()}"
@@ -47,7 +47,7 @@ def test_decode_version_response() -> None:
     raw_data[0] = 1   # major
     raw_data[1] = 3   # minor
     raw_data[2] = 7   # patch
-    raw_msg = CanMessage(arbitration_id=L0_CB_COB_RECEIVED_BOARD_VERSION, data=bytes(raw_data))
+    raw_msg = CanMessage(arbitration_id=L0_CB_COB.RECEIVED_BOARD_VERSION, data=bytes(raw_data))
 
     # When
     version = BoardVersionResponse.from_can(raw_msg)
