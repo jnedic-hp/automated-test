@@ -6,14 +6,14 @@ from typing import Optional
 
 from common.can_interface import CanMessage
 from common.can_protocol import (
-    L0_HMI_COB_REQUEST_BOARD_VERSION,
+    L0_HMI_COB,
     encode_version_response,
 )
 
 # Maps an outgoing COB-ID to the scripted reply the mock queues automatically.
 # Extend this dict as more off-target tests are added.
 _SCRIPTED_REPLIES: dict[int, CanMessage] = {
-    L0_HMI_COB_REQUEST_BOARD_VERSION: encode_version_response(0, 2, 0),
+    L0_HMI_COB.REQUEST_BOARD_VERSION: encode_version_response(0, 2, 0),
 }
 
 
