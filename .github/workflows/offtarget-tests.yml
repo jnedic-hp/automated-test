@@ -1,13 +1,16 @@
 name: Off-Target Tests
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Flash Firmware"]
+    types:
+      - completed
     branches:
       - main
-  pull_request:
 
 jobs:
   offtarget:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, x64]
 
     steps:
