@@ -23,19 +23,27 @@ jobs:
       - name: Run off-target tests
         run: bash scripts/run_offtarget_tests.sh
 
-      - name: Debug artifact endpoint
+      - name: Publish test summary
         if: always()
         run: |
-          echo "ACTIONS_RESULTS_URL=$ACTIONS_RESULTS_URL"
-          echo "ACTIONS_RUNTIME_URL=$ACTIONS_RUNTIME_URL"
-          curl -I --max-time 5 "$ACTIONS_RESULTS_URL" || echo "FAILED: $ACTIONS_RESULTS_URL"
-          curl -I --max-time 5 "$ACTIONS_RUNTIME_URL" || echo "FAILED: $ACTIONS_RUNTIME_URL"
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: offtarget-results
-          path: |
-            results/offtarget-results.xml
-            results/offtarget-report.html
+          python3 - <<'EOF'
+          import os, xml.etree.ElementTree as ET
+          tree = ET.parse("results/offtarget-results.xml")
+          suite = tree.getroot()
+          if suite.tag == "testsuites":
+              suite = suite[0]
+          tests   = int(suite.attrib.get("tests",    0))
+          failures= int(suite.attrib.get("failures", 0))
+          errors  = int(suite.attrib.get("errors",   0))
+          skipped = int(suite.attrib.get("skipped",  0))
+          passed  = tests - failures - errors - skipped
+          status  = "✅ Passed" if (failures + errors) == 0 else "❌ Failed"
+          lines = [
+              f"## Off-Target Test Results — {status}\n",
+              f"| Tests | Passed | Failed | Errors | Skipped |",
+              f"|-------|--------|--------|--------|---------|",
+              f"| {tests} | {passed} | {failures} | {errors} | {skipped} |",
+          ]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write("\n".join(lines) + "\n")
+          EOF
