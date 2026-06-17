@@ -1324,12 +1324,10 @@ class L1_OmsVersionResp:
 
     def encode(self) -> CanMessage:
         return CanMessage(arbitration_id=self.COB_ID,
-                          data=struct.pack(
-                              "<BBBHQQBIII",
-                              self.major, self.minor, self.patch, self.build,
-                              self.date_stamp, self.pcb_serial_num, self.type_rev,
-                              self.micro_serial_num1, self.micro_serial_num2, self.micro_serial_num3,
-                          ),)
+                          data=struct.pack("<BBBHQQBIII",
+                                           self.major, self.minor, self.patch, self.build,
+                                           self.date_stamp, self.pcb_serial_num, self.type_rev,
+                                           self.micro_serial_num1, self.micro_serial_num2, self.micro_serial_num3,),)
 
 
 @dataclass
@@ -1374,15 +1372,13 @@ class L1_OmsBoardStatus:
 
     def encode(self) -> CanMessage:
         return CanMessage(arbitration_id=self.COB_ID,
-                          data=struct.pack(
-                              "<4H3BH2BH2B",
-                              self.voltage_24v, self.voltage_12v, self.voltage_3_3v, self.voltage_5v,
-                              self.usb_connection_status, self.filter_pump_status, self.dispose_switch_status,
-                              self.board_temperature,
-                              self.drain_pan_switch_status, self.error_codes,
-                              self.filter_pump_current,
-                              self.token_owner, self.rti_connected_status,
-                          ),)
+                          data=struct.pack("<4H3BH2BH2B",
+                                           self.voltage_24v, self.voltage_12v, self.voltage_3_3v, self.voltage_5v,
+                                           self.usb_connection_status, self.filter_pump_status, self.dispose_switch_status,
+                                           self.board_temperature,
+                                           self.drain_pan_switch_status, self.error_codes,
+                                           self.filter_pump_current,
+                                           self.token_owner, self.rti_connected_status,),)
 
 
 @dataclass
@@ -1420,14 +1416,12 @@ class L1_OmsWellWizardStatus:
 
     def encode(self) -> CanMessage:
         return CanMessage(arbitration_id=self.COB_ID,
-                          data=struct.pack(
-                              "<4I14B",
-                              self.well_id1, self.well_id2, self.well_id3, self.well_id4,
-                              self.screen, self.well_count,
-                              self.well_num1, self.well_num2, self.well_num3, self.well_num4,
-                              self.node_id1, self.node_id2, self.node_id3, self.node_id4,
-                              self.icon_state1, self.icon_state2, self.icon_state3, self.icon_state4,
-                          ),)
+                          data=struct.pack("<4I14B",
+                                           self.well_id1, self.well_id2, self.well_id3, self.well_id4,
+                                           self.screen, self.well_count,
+                                           self.well_num1, self.well_num2, self.well_num3, self.well_num4,
+                                           self.node_id1, self.node_id2, self.node_id3, self.node_id4,
+                                           self.icon_state1, self.icon_state2, self.icon_state3, self.icon_state4,),)
 
 
 @dataclass
