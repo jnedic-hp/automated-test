@@ -1,20 +1,12 @@
 # Python
 venv/
 __pycache__/
-**/__pycache__/
 *.pyc
-*.pyo
-*.pyd
 *.egg-info/
-dist/
-build/
-.eggs/
 
 # Test results
 results/
 .pytest_cache/
-.coverage
-htmlcov/
 
 # Firmware binaries
 # Commented-out for the mean time to allow firmware binaries to be committed for testing purposes. These should be re-enabled before merging to main.
@@ -22,14 +14,11 @@ htmlcov/
 # boards/firmwares/*.bin
 # boards/firmwares/*.hex
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Editor
 .vscode/
-*.swp
-*.swo
+
+# UML Generated files
+out/
 
 # Logs
 *.log
