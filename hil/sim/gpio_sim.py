@@ -10,7 +10,24 @@ try:
 except ImportError:
     _GPIO_AVAILABLE = False
 
-# GPIO signal mapping (BCM numbering).
+# BCM List of GPIOs: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#gpio-pinout
+#
+#   GPIO    Pull
+#   ----    ----
+#    4      High
+#    5      High
+#    6      High
+#   12      Low
+#   13      Low
+#   16      Low
+#   17      Low
+#   22      Low
+#   23      Low
+#   24      Low
+#   25      Low
+#   26      Low
+#   27      Low
+
 class GPIO_SIGNALS:
     # (name, bcm_pin, direction)
     FILL_VALVE_LEFT_FEEDBACK  = ("FILL_VALVE_LEFT_FEEDBACK",  4, 0)       # B_SW_1 from Platform Control Board
