@@ -16,33 +16,31 @@ class CanMessage:
     timestamp: float = 0.0     # seconds since epoch; 0 = not set
 
 
-class ICanInterface(Protocol):
+class CanInterface(Protocol):
     def send(self, msg: CanMessage) -> None:
-        """Transmit a CAN FD frame. Raises CanSendError on bus-off."""
+        # Transmit a CAN FD frame. Raises CanSendError on bus-off.
         ...
 
     def recv(self, timeout_s: float) -> Optional[CanMessage]:
-        """Block up to timeout_s for the next received frame.
-        Returns None on timeout."""
+        # Block up to timeout_s for the next received frame. Returns None on timeout.
         ...
 
     def recv_matching(self, arbitration_id: int, timeout_s: float) -> CanMessage:
-        """Block until a frame with the given COB-ID arrives.
-        Raises TimeoutError if timeout_s elapses first."""
+        # Block until a frame with the given COB-ID arrives. Raises TimeoutError if timeout_s elapses first.
         ...
 
     def flush(self) -> None:
-        """Discard all buffered received frames."""
+        # Discard all buffered received frames.
         ...
 
     def close(self) -> None:
-        """Release the CAN interface. Safe to call multiple times."""
+        # Release the CAN interface. Safe to call multiple times.
         ...
 
 
 class SocketCanInterface:
-    """Real SocketCAN implementation of ICanInterface.
-
+    """
+    Real SocketCAN implementation of CanInterface.
     Wraps python-can Bus with a background listener thread so that frames
     arriving before recv() is called are never dropped.
     """

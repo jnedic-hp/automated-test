@@ -6,9 +6,10 @@ from typing import ClassVar
 
 from common.can_interface import CanMessage
 
-# ---------------------------------------------------------------------------
-# Line 0 (FDCAN1) CB <-> HMI COB-IDs
-# ---------------------------------------------------------------------------
+
+# ===========================================================================
+# Line 0 (FDCAN1) COB-ID constants (CB <-> HMI)
+# ===========================================================================
 class L0_HMI_COB:
     REQUEST_BOARD_VERSION              = 0x143a  # RPDO57 - L0_I_REQUEST_BOARD_VERSION_INFO
     UI_READY                           = 0x1429  # RPDO26 - L0_I_REQUEST_UI_READY1
@@ -99,9 +100,9 @@ class L0_CB_COB:
     NOTIFY_START_WELL_WIZARD            = 0x1836  # TPDO55 - L0_I_NOTIFY_START_WELL_WIZARD
     NOTIFY_WELL_WIZARD_STATUS           = 0x1837  # TPDO56 - L0_I_NOTIFY_WELL_WIZARD_STATUS
 
-# ---------------------------------------------------------------------------
-# Line 1 (FDCAN2) CB <-> OMS COB-IDs
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# Line 1 (FDCAN2) COB-ID constants (CB <-> OMS)
+# ===========================================================================
 class L1_OMS_COB:
     SELECTOR_VALVE_RESP                = 0x1400  # RPDO1  - OMS selector valve state
     FILTER_PUMP_RESP                   = 0x1401  # RPDO2  - OMS filter pump state
@@ -135,10 +136,10 @@ class L1_CB_COB:
     CBTOOMS_WELL_WIZARD_SET             = 0x180a  # TPDO11 - L1_I_CBTOOMS_REQUEST_WELL_WIZARD_SET
     SET_STRING                          = 0x180b  #        - L1_I_REQUEST_SET_STRING (serial number)
 
-# ===========================================================================
-# Line 0 - HIL → CB
-# ===========================================================================
 
+# ===========================================================================
+# Line 0 - HIL -> CB command encoders and version helpers
+# ===========================================================================
 @dataclass(frozen=True)
 class BoardVersionResponse:
     major: int
@@ -579,7 +580,7 @@ class L0_HmiBoardVersionInfo:
 
 
 # ===========================================================================
-# Line 0 - CB → HIL
+# Line 0 - CB -> HIL notification decoders
 # ===========================================================================
 
 @dataclass(frozen=True)
@@ -1230,7 +1231,7 @@ class L0_NotifyWellWizardStatus:
 
 
 # ===========================================================================
-# Line 1 - HIL → CB
+# Line 1 - HIL (OMS emulation) -> CB message encoders
 # ===========================================================================
 
 @dataclass
@@ -1465,7 +1466,7 @@ class L1_FilterPumpDeadHead:
 
 
 # ===========================================================================
-# Line 1 - CB → HIL
+# Line 1 - CB -> HIL command decoders
 # ===========================================================================
 
 @dataclass(frozen=True)
