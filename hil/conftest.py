@@ -3,9 +3,14 @@ import pytest
 from common.can_interface import SocketCanInterface
 
 
+def pytest_collection_modifyitems(items):
+    # Run HIL prereq tests before the rest of the suite.
+    items.sort(key=lambda item: ("/prereq/" not in item.nodeid.replace("\\", "/"), item.nodeid))
+
+
 @pytest.fixture(scope="session")
 def can_interface():
-    """Provides a SocketCanInterface on can0 for the test session."""
+    # Provides a SocketCanInterface on can0 for the test session.
     channel = "can0"
     iface = SocketCanInterface(channel=channel)
     try:
@@ -24,5 +29,5 @@ def can_interface():
 
 @pytest.fixture(autouse=True)
 def flush_can(can_interface):
-    """Discard stale frames before every test."""
+    # Discard stale frames before every test.
     can_interface.flush()
