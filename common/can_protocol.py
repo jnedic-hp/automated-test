@@ -1,3 +1,8 @@
+# @file    can_protocol.py
+# @brief   CAN protocol definitions and message encoders/decoders.
+# @details Defines COB-IDs, dataclass message types, and encode/decode
+#          helpers for the L0 CAN line (CB <-> HMI).
+
 from __future__ import annotations
 
 import struct

@@ -1,3 +1,9 @@
+# @file    temperature_sim.py
+# @brief   Per-zone oil temperature simulator using MCP4922 SPI DAC.
+# @details Converts temperature values to 12-bit DAC counts and sends
+#          them over SPI to the MCP4922. Supports per-zone calibration
+#          correction, ramp control, and multi-zone commands.
+
 from __future__ import annotations
 import logging
 from typing import Dict

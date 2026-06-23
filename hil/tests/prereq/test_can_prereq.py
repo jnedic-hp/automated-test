@@ -1,4 +1,7 @@
-# Preflight HIL checks that must pass before the rest of the suite.
+# @file    test_can_prereq.py
+# @brief   Preflight HIL checks that must pass before the main test suite.
+# @details Verifies the Control Board reaches NMT OPERATIONAL state and
+#          responds with the expected firmware version over CAN FD.
 
 import pytest
 

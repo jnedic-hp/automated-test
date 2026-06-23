@@ -1,3 +1,9 @@
+# @file    gpio_sim.py
+# @brief   Discrete GPIO signal driver for the HIL controller.
+# @details Maps named signals to BCM GPIO pins on the Raspberry Pi 4 and
+#          provides set/get helpers. PlatformControlBoardGpioSim adds
+#          board-specific convenience wrappers.
+
 from __future__ import annotations
 import logging
 from typing import Dict, Tuple

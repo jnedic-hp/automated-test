@@ -1,3 +1,8 @@
+# @file    conftest.py
+# @brief   pytest fixtures for the HIL test suite.
+# @details Provides a session-scoped SocketCanInterface on can0 and an
+#          autouse fixture that flushes stale CAN frames before each test.
+
 import pytest
 
 from common.can_interface import SocketCanInterface

@@ -1,4 +1,7 @@
-# test_can_boot.py - verify the Control Board boot sequence over CAN
+# @file    test_can_boot.py
+# @brief   HIL tests for the Control Board CAN boot sequence.
+# @details Verifies that the board sends a BackendReady response after
+#          receiving a UiReady frame over the L0 CAN line.
 
 import pytest
 from common.can_protocol import L0_CB_COB, L0_UiReady

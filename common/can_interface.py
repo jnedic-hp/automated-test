@@ -1,3 +1,9 @@
+# @file    can_interface.py
+# @brief   CAN interface abstraction and SocketCAN implementation.
+# @details Defines the CanMessage dataclass and the CanInterface protocol
+#          used by all test layers. SocketCanInterface provides a real
+#          hardware backend via python-can.
+
 from __future__ import annotations
 import queue
 import threading

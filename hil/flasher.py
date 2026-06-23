@@ -1,3 +1,8 @@
+# @file    flasher.py
+# @brief   Firmware flashing utility for the DUT via OpenOCD.
+# @details Uses OpenOCD with an STLINK-V3SET probe to program and reset
+#          the target board over SWD. Wraps the openocd CLI subprocess.
+
 from __future__ import annotations
 import subprocess
 import time

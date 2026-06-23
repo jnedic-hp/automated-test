@@ -1,3 +1,8 @@
+# @file    can_mock.py
+# @brief   In-process virtual CAN bus for off-target testing.
+# @details Implements the CanInterface protocol without hardware. Scripted
+#          replies are automatically queued when a matching COB-ID is sent.
+
 from __future__ import annotations
 
 import queue

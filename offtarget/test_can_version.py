@@ -1,4 +1,8 @@
-# test_can_version.py - verify version request/response encoding w/out hardware
+# @file    test_can_version.py
+# @brief   Off-target tests for CAN version request/response encoding.
+# @details Verifies that the version request frame is correctly built and
+#          that a version response matches the expected firmware version,
+#          without requiring real hardware.
 
 from common.can_interface import CanMessage
 from common.can_protocol import BoardVersionResponse, L0_HMI_COB, L0_CB_COB, encode_request_version
