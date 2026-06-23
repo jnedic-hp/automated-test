@@ -1,6 +1,6 @@
 import pytest
 
-from offtarget.mocks.can_mock import CanMock
+from offtarget.can_mock import CanMock
 
 
 @pytest.fixture(scope="session")
