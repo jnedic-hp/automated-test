@@ -52,11 +52,38 @@ class PlatformCBFlasher:
             cm7 = self._strip_elf(cm7, Path(tmp))
             cm4 = self._strip_elf(cm4, Path(tmp))
 
+            # Both ELFs are flashed using CM7 (cpu0) as the algorithm target.
+            #
+            # CM7 is programmed via its own target (cpu0).
+            # CM4 is programmed via its own target (cpu1).
+            #
+            # Why CM4 must use cpu1 (not cpu1 via CM7 as we tried):
+            #   When the stm32h7x algorithm runs on CM7 to erase sector 14
+            #   (bank 2, 0x081C0000-0x081DFFFF), CM7 crashes before the write
+            #   phase — leaving CM4's sector erased but never written.  Using
+            #   CM4's own algorithm target avoids this: CM4's algorithm runs in
+            #   CM4's DTCM (0x10000000) and doesn't contend with bank 2.
+            #
+            # Expected CM7 crash (unavoidable, harmless):
+            #   The CM4 flash algorithm briefly resumes CM4 (cpu1), which
+            #   accidentally releases CM7 from debug-halt.  CM7 runs, reaches
+            #   its CM4-sync code, finds CM4 busy, and double-faults.
+            #   HOWEVER, CM4's "** Programming Finished **" appears BEFORE the
+            #   crash — the flash content is safe.
+            #
+            # Recovery via `reset run`:
+            #   SRST hardware-resets both cores (clearing CM7's lockup) and
+            #   lets them boot freely — exactly like a power cycle.  This only
+            #   works once the option byte BOOT_CM4_ADD0 correctly encodes
+            #   CM4's vector-table address (set by sd_partition.cmd / firmware
+            #   team).  With correct option bytes both cores boot normally and
+            #   the LEDs turn on.
             cmds = (
                 f"init; reset halt; "
                 f"targets {_CM7_TARGET}; program {cm7}; "
                 f"targets {_CM4_TARGET}; program {cm4}; "
-                f"reset run; shutdown"
+                f"reset run; "
+                f"shutdown"
             )
             result = self._run_openocd(cmds)
 
