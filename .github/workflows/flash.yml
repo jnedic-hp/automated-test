@@ -14,4 +14,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Flash firmware to board
-        run: ./scripts/flash_firmware.sh boards/firmwares/test_ledon.elf
+        run: ./scripts/flash_firmware.sh boards/firmwares/platform-control-board/ControlBrd1_CM7.elf boards/firmwares/platform-control-board/ControlBrd1_CM4.elf
