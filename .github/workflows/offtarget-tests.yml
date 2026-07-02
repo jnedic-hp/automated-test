@@ -23,9 +23,9 @@ jobs:
           .venv/bin/pip install -r offtarget/requirements.txt
 
       - name: Run off-target tests
-        run: bash scripts/run_offtarget_tests.sh
-        env:
-          PATH: ${{ github.workspace }}/.venv/bin:${{ env.PATH }}
+        run: |
+          source .venv/bin/activate
+          bash scripts/run_offtarget_tests.sh
 
       - name: Publish test summary
         if: always()
