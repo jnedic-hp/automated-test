@@ -18,10 +18,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: pip3 install -r offtarget/requirements.txt
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r offtarget/requirements.txt
 
       - name: Run off-target tests
         run: bash scripts/run_offtarget_tests.sh
+        env:
+          PATH: ${{ github.workspace }}/.venv/bin:${{ env.PATH }}
 
       - name: Publish test summary
         if: always()
