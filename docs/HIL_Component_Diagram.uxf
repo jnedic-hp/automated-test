@@ -1,76 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>10</zoom_level>
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>570</x>
-      <y>440</y>
-      <w>210</w>
-      <h>330</h>
+      <x>414</x>
+      <y>414</y>
+      <w>189</w>
+      <h>297</h>
     </coordinates>
     <panel_attributes>&lt;&lt;execution environment&gt;&gt;
 HIL Controller
 Raspberry Pi 4 Model B
-bg=GREEN</panel_attributes>
+bg=#BE185D</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>1070</x>
-      <y>440</y>
-      <w>210</w>
-      <h>330</h>
+      <x>864</x>
+      <y>414</y>
+      <w>189</w>
+      <h>297</h>
     </coordinates>
     <panel_attributes>&lt;&lt;execution environment&gt;&gt;
 Platform Control Board
 fg=BLACK
-bg=RED</panel_attributes>
+bg=#D97706</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>270</x>
-      <y>440</y>
-      <w>210</w>
-      <h>80</h>
+      <x>144</x>
+      <y>414</y>
+      <w>189</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;execution environment&gt;&gt;
-PC</panel_attributes>
+PC
+bg=#DC2626</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>470</x>
-      <y>200</y>
-      <w>110</w>
-      <h>50</h>
+      <x>324</x>
+      <y>198</y>
+      <w>99</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>WiFi
-Network</panel_attributes>
+Network
+bg=#2563EB
+</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>225</x>
+      <y>234</y>
+      <w>162</w>
+      <h>207</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>160.0;10.0;160.0;130.0;10.0;130.0;10.0;210.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>360</x>
-      <y>240</y>
-      <w>180</w>
-      <h>220</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;..</panel_attributes>
-    <additional_attributes>160.0;10.0;160.0;130.0;10.0;130.0;10.0;200.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>510</x>
-      <y>240</y>
-      <w>180</w>
-      <h>230</h>
+      <y>234</y>
+      <w>162</w>
+      <h>207</h>
     </coordinates>
     <panel_attributes>lt=&lt;..</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;130.0;160.0;130.0;160.0;210.0</additional_attributes>
@@ -78,23 +81,23 @@ Network</panel_attributes>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>870</x>
-      <y>530</y>
-      <w>110</w>
-      <h>50</h>
+      <x>684</x>
+      <y>495</y>
+      <w>99</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>&lt;&lt;device&gt;&gt;
 ST-Link
-bg=GRAY</panel_attributes>
+bg=#7C3AED</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>760</x>
-      <y>540</y>
-      <w>130</w>
-      <h>40</h>
+      <x>585</x>
+      <y>504</y>
+      <w>117</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 USB</panel_attributes>
@@ -103,10 +106,10 @@ USB</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>540</y>
-      <w>130</w>
-      <h>40</h>
+      <x>765</x>
+      <y>504</y>
+      <w>117</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 SWD</panel_attributes>
@@ -115,34 +118,36 @@ SWD</panel_attributes>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>670</x>
-      <y>280</y>
-      <w>110</w>
-      <h>50</h>
+      <x>504</x>
+      <y>270</y>
+      <w>99</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>Power Supply
-5V 3A</panel_attributes>
+5V 3A
+bg=#16A34A</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>1170</x>
-      <y>280</y>
-      <w>110</w>
-      <h>50</h>
+      <x>954</x>
+      <y>270</y>
+      <w>99</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>Power Supply
-24V 32A</panel_attributes>
+24V 32A
+bg=#16A34A</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1210</x>
-      <y>320</y>
-      <w>30</w>
-      <h>150</h>
+      <x>990</x>
+      <y>306</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
@@ -150,10 +155,10 @@ SWD</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>460</x>
-      <y>460</y>
-      <w>130</w>
-      <h>40</h>
+      <x>315</x>
+      <y>432</y>
+      <w>117</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;.&gt;
 SSH</panel_attributes>
@@ -162,10 +167,10 @@ SSH</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>710</x>
-      <y>320</y>
-      <w>30</w>
-      <h>150</h>
+      <x>540</x>
+      <y>306</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
@@ -173,13 +178,77 @@ SSH</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>170</x>
-      <y>130</y>
-      <w>1200</w>
-      <h>680</h>
+      <x>54</x>
+      <y>99</y>
+      <w>1080</w>
+      <h>648</h>
     </coordinates>
     <panel_attributes>Hardware-In-Loop
-halign=center</panel_attributes>
+halign=center
+fontsize=50
+bg=#FCF4A3</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>585</x>
+      <y>630</y>
+      <w>117</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+USB</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>765</x>
+      <y>612</y>
+      <w>117</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+CANH</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLDeployment</id>
+    <coordinates>
+      <x>684</x>
+      <y>603</y>
+      <w>99</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;device&gt;&gt;
+USB-CAN FD
+Adapter
+bg=#7C3AED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>765</x>
+      <y>630</y>
+      <w>117</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+CANL</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>765</x>
+      <y>648</y>
+      <w>117</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+GND</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
   </element>
 </diagram>
