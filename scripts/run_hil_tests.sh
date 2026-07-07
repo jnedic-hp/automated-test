@@ -13,4 +13,4 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 mkdir -p results
-python -m pytest hil/tests/ -v --junitxml=results/hil-results.xml --html=results/hil-report.html --self-contained-html --css=assets/report.css "$@"
+python -m pytest hil/tests/hmi_to_cb -v --junitxml=results/hil-results.xml --html=results/hil-report.html --self-contained-html --css=assets/report.css "$@"
