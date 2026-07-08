@@ -1,0 +1,36 @@
+name: Upload Firmware to JFrog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read firmware version
+        id: version
+        run: |
+          VERSION=$(python3 -c "
+          from common.version import PLATFORM_CB_VERSION_MAJOR as A, PLATFORM_CB_VERSION_MINOR as B, PLATFORM_CB_VERSION_PATCH as C
+          print(f'{A}.{B}.{C}')
+          ")
+          echo "value=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: https://hennypenny.jfrog.io/artifactory
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_ACCESS_TOKEN }}
+
+      - name: Upload firmware files
+        run: |
+          jf rt upload \
+            "boards/firmwares/platform-control-board/*.elf" \
+            "hpe-generic-local/platform/platform-control-board/${{ steps.version.outputs.value }}/" \
+            --flat=true \
+            --fail-no-op=true
+
