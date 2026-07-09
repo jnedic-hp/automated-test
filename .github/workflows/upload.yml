@@ -3,6 +3,9 @@ name: Upload Firmware to JFrog
 on:
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   upload:
     runs-on: ubuntu-latest
@@ -23,14 +26,14 @@ jobs:
       - name: Set up JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: https://hennypenny.jfrog.io/artifactory
-          JF_ACCESS_TOKEN: ${{ secrets.JFROG_ACCESS_TOKEN }}
+          JF_URL: ${{ vars.JF_URL }}
+          JF_USER: ${{ secrets.JF_USER }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 
       - name: Upload firmware files
         run: |
           jf rt upload \
-            "boards/firmwares/platform-control-board/*.elf" \
-            "hpe-generic-local/platform/platform-control-board/${{ steps.version.outputs.value }}/" \
-            --flat=true \
+            --spec=.github/config/upload_platform_spec.json \
+            --spec-vars="VERSION=${{ steps.version.outputs.value }}" \
             --fail-no-op=true
 

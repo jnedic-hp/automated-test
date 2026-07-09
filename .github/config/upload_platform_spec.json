@@ -1,0 +1,9 @@
+{
+  "files": [
+    {
+      "pattern": "boards/firmwares/platform-control-board/*.elf",
+      "target": "hpe-generic-local/platform/platform-control-board/{VERSION}/",
+      "flat": "true"
+    }
+  ]
+}
