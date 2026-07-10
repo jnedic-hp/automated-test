@@ -28,7 +28,6 @@ jobs:
             fi
 
             jf rt dl \
-              --url "${{ vars.JF_URL }}" \
               --spec ./.github/config/download_firmware_spec.json \
               --spec-vars "repo_path=${FW_PATH}"
 
