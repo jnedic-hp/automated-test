@@ -16,7 +16,7 @@ jobs:
 
       - name: Download firmware from JFrog artifactory
         run: |
-            FW_PATH="${{ inputs.repo_path || vars.REPO_PATH }}"
+            FW_PATH="${{ vars.FW_PATH }}"
 
             if [ -z "${FW_PATH}" ]; then
               echo "::error::FW_PATH is not set."
