@@ -23,7 +23,9 @@ jobs:
               exit 1
             fi
 
-            jf rt dl --spec ./.github/config/download_firmware_spec.json \
+            jf rt dl \
+              --url "${{ vars.JF_URL }}" \
+              --spec ./.github/config/download_firmware_spec.json \
               --spec-vars "repo_path=${FW_PATH}"
 
             for fw in ControlBrd1_CM4.elf ControlBrd1_CM7.elf; do
