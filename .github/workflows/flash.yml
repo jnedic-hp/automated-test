@@ -14,5 +14,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download firmware from JFrog artifactory
+        run: |
+            REPO_PATH="${{ inputs.repo_path || vars.REPO_PATH }}"
+
+            if [ -z "${REPO_PATH}" ]; then
+              echo "::error::REPO_PATH is not set."
+              exit 1
+            fi
+
+            jfrog rt dl --spec ./.github/config/download_firmware_spec.json \
+              --spec-vars "repo_path=${REPO_PATH}"
+
+            for fw in ControlBrd1_CM4.elf ControlBrd1_CM7.elf; do
+              if [ ! -f "boards/firmwares/platform-control-board/$fw" ]; then
+                echo "::error::$fw not found in Artifactory."
+                exit 1
+              fi
+            done
+
       - name: Flash firmware to board
         run: ./scripts/flash_firmware.sh boards/firmwares/platform-control-board/ControlBrd1_CM7.elf boards/firmwares/platform-control-board/ControlBrd1_CM4.elf
