@@ -31,9 +31,11 @@ jobs:
               --spec ./.github/config/download_firmware_spec.json \
               --spec-vars "repo_path=${FW_PATH}"
 
+            FW_DST="/home/hil/automated-test/boards/firmwares/platform-control-board"
+
             for fw in ControlBrd1_CM4.elf ControlBrd1_CM7.elf; do
-              if [ ! -f "boards/firmwares/platform-control-board/$fw" ]; then
-                echo "::error::$fw not found in Artifactory."
+              if [ ! -f "$FW_DST/$fw" ]; then
+                echo "::error::$fw not downloaded."
                 exit 1
               fi
             done
