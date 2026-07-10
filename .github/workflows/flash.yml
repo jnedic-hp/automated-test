@@ -16,15 +16,15 @@ jobs:
 
       - name: Download firmware from JFrog artifactory
         run: |
-            REPO_PATH="${{ inputs.repo_path || vars.REPO_PATH }}"
+            FW_PATH="${{ inputs.repo_path || vars.REPO_PATH }}"
 
-            if [ -z "${REPO_PATH}" ]; then
-              echo "::error::REPO_PATH is not set."
+            if [ -z "${FW_PATH}" ]; then
+              echo "::error::FW_PATH is not set."
               exit 1
             fi
 
             jfrog rt dl --spec ./.github/config/download_firmware_spec.json \
-              --spec-vars "repo_path=${REPO_PATH}"
+              --spec-vars "repo_path=${FW_PATH}"
 
             for fw in ControlBrd1_CM4.elf ControlBrd1_CM7.elf; do
               if [ ! -f "boards/firmwares/platform-control-board/$fw" ]; then
