@@ -1,13 +1,13 @@
 {
     "files": [
         {
-            "pattern": "${repo_path}/ControlBrd1_CM7.elf",
-            "target": "boards/firmwares/platform-control-board/",
+            "pattern": "${repo_path}/ControlBrd1_CM4.elf",
+            "target": "/home/hil/automated-test/boards/firmwares/platform-control-board/",
             "flat": "true"
         },
         {
-            "pattern": "${repo_path}/ControlBrd1_CM4.elf",
-            "target": "boards/firmwares/platform-control-board/",
+            "pattern": "${repo_path}/ControlBrd1_CM7.elf",
+            "target": "/home/hil/automated-test/boards/firmwares/platform-control-board/",
             "flat": "true"
         }
     ]
