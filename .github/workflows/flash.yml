@@ -31,7 +31,7 @@ jobs:
               --spec ./.github/config/download_firmware_spec.json \
               --spec-vars "repo_path=${FW_PATH}"
 
-            FW_DST="/home/hil/automated-test/boards/firmwares/platform-control-board"
+            FW_DST="${GITHUB_WORKSPACE}/boards/firmwares/platform-control-board"
 
             for fw in ControlBrd1_CM4.elf ControlBrd1_CM7.elf; do
               if [ ! -f "$FW_DST/$fw" ]; then
