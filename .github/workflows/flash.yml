@@ -14,6 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug JFrog URL
+        run: |
+            echo "JF_URL=${{ vars.JF_URL }}"
+
       - name: Download firmware from JFrog artifactory
         run: |
             FW_PATH="${{ vars.FW_PATH }}"
