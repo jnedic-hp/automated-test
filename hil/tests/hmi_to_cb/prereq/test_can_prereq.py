@@ -40,7 +40,7 @@ def test_control_board_version(can_interface) -> None:
     """
     can_interface.send(encode_request_version())
 
-    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB.RECEIVED_BOARD_VERSION,
+    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB.ResponseMessage.RSP_BOARD_VERSION,
                                         timeout_s=2.0,)
 
     version = BoardVersionResponse.from_can(reply)

@@ -21,7 +21,7 @@ def test_control_board_version(can_interface) -> None:
 
     can_interface.send(encode_request_version())
 
-    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB.RECEIVED_BOARD_VERSION,
+    reply = can_interface.recv_matching(arbitration_id=L0_CB_COB.ResponseMessage.RSP_BOARD_VERSION,
                                         timeout_s=2.0,)
 
     version = BoardVersionResponse.from_can(reply)
@@ -37,7 +37,7 @@ def test_encode_version_request() -> None:
     """
     msg = encode_request_version()
 
-    assert msg.arbitration_id == L0_HMI_COB.REQUEST_BOARD_VERSION, (f"Wrong COB-ID: expected 0x{L0_HMI_COB.REQUEST_BOARD_VERSION:03X}, "
+    assert msg.arbitration_id == L0_HMI_COB.RequestMessage.REQ_BOARD_VERSION, (f"Wrong COB-ID: expected 0x{L0_HMI_COB.RequestMessage.REQ_BOARD_VERSION:03X}, "
                                                                     f"got 0x{msg.arbitration_id:03X}")
     assert len(msg.data) == 8, f"Payload must be 8 bytes, got {len(msg.data)}"
     assert msg.data == bytes(8), f"Payload must be all zeros, got {msg.data.hex()}"
@@ -53,7 +53,7 @@ def test_decode_version_response() -> None:
     raw_data[0] = 1   # major
     raw_data[1] = 3   # minor
     raw_data[2] = 7   # patch
-    raw_msg = CanMessage(arbitration_id=L0_CB_COB.RECEIVED_BOARD_VERSION,
+    raw_msg = CanMessage(arbitration_id=L0_CB_COB.ResponseMessage.RSP_BOARD_VERSION,
                          data=bytes(raw_data))
 
     version = BoardVersionResponse.from_can(raw_msg)

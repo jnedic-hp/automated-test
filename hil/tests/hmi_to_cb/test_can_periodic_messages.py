@@ -21,9 +21,9 @@ def test_can_periodic_messages_io_stats(can_interface):
     When   the HIL listens on can0
     Then   an IO_STATS frame (COB-ID 0x1800) is received within 2 s
     """
-    msg = can_interface.recv_matching(arbitration_id=L0_CB_COB.IO_STATS,
+    msg = can_interface.recv_matching(arbitration_id=L0_CB_COB.PeriodicMessage.PRD_IO_STATS,
                                       timeout_s=PERIODIC_TIMEOUT_S,)
-    assert msg is not None, (f"No IO_STATS frame (0x{L0_CB_COB.IO_STATS:04X}) received within {PERIODIC_TIMEOUT_S}s.")
+    assert msg is not None, (f"No IO_STATS frame (0x{L0_CB_COB.PeriodicMessage.PRD_IO_STATS:04X}) received within {PERIODIC_TIMEOUT_S}s.")
     assert len(msg.data) > 0, "IO_STATS frame has empty payload."
 
 
@@ -34,9 +34,9 @@ def test_can_periodic_messages_rtc_date_time(can_interface):
     When   the HIL listens on can0
     Then   an RTC_DATE_TIME frame (COB-ID 0x1801) is received within 2 s
     """
-    msg = can_interface.recv_matching(arbitration_id=L0_CB_COB.RTC_DATE_TIME,
+    msg = can_interface.recv_matching(arbitration_id=L0_CB_COB.PeriodicMessage.PRD_RTC_DATE_TIME,
                                       timeout_s=PERIODIC_TIMEOUT_S,)
-    assert msg is not None, (f"No RTC_DATE_TIME frame (0x{L0_CB_COB.RTC_DATE_TIME:04X}) received within {PERIODIC_TIMEOUT_S}s.")
+    assert msg is not None, (f"No RTC_DATE_TIME frame (0x{L0_CB_COB.PeriodicMessage.PRD_RTC_DATE_TIME:04X}) received within {PERIODIC_TIMEOUT_S}s.")
     assert len(msg.data) > 0, "RTC_DATE_TIME frame has empty payload."
 
 
@@ -48,11 +48,11 @@ def test_can_periodic_messages_board_status(can_interface):
     Then   a BOARD_STATUS frame (COB-ID 0x1802) is received within 2 s
     """
     msg = can_interface.recv_matching(
-        arbitration_id=L0_CB_COB.BOARD_STATUS,
+        arbitration_id=L0_CB_COB.PeriodicMessage.PRD_BOARD_STATUS,
         timeout_s=PERIODIC_TIMEOUT_S,
     )
     assert msg is not None, (
-        f"No BOARD_STATUS frame (0x{L0_CB_COB.BOARD_STATUS:04X}) received within "
+        f"No BOARD_STATUS frame (0x{L0_CB_COB.PeriodicMessage.PRD_BOARD_STATUS:04X}) received within "
         f"{PERIODIC_TIMEOUT_S}s. Check firmware state machine is running."
     )
     assert len(msg.data) > 0, "BOARD_STATUS frame has empty payload."
@@ -68,9 +68,9 @@ def test_periodic_messages_all_arrive(can_interface):
     import time
 
     expected = {
-        L0_CB_COB.IO_STATS,
-        L0_CB_COB.RTC_DATE_TIME,
-        L0_CB_COB.BOARD_STATUS,
+        L0_CB_COB.PeriodicMessage.PRD_IO_STATS,
+        L0_CB_COB.PeriodicMessage.PRD_RTC_DATE_TIME,
+        L0_CB_COB.PeriodicMessage.PRD_BOARD_STATUS,
     }
     seen = set()
     deadline = time.monotonic() + 5.0
