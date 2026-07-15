@@ -1,0 +1,42 @@
+@startuml
+
+actor User
+box "Dev Tool" #70E0BB
+    participant "Dev Tool GUI"          as GUI
+    participant "Dev Tool Backend"      as Backend
+end box
+participant "USB-CAN Adapter"           as USBCAN
+box #FF6666
+    participant "Platform Control Board"    as Board
+end box
+
+User -> GUI : Click Send Request
+
+GUI -> Backend : Send Request
+activate Backend
+Backend -> Backend : Build Protocol Message
+Backend -> USBCAN : Send message
+
+activate USBCAN
+USBCAN -> USBCAN : Convert to CAN Frames
+USBCAN -> Board : CAN Request Frames
+
+activate Board
+Board -> Board : Validate Request
+Board -> Board : Execute Command
+Board -> Board : Generate Response
+Board --> USBCAN : CAN Response Frames
+deactivate Board
+USBCAN -> USBCAN : Convert CAN Frames to USB Response
+USBCAN --> Backend : Response Message
+deactivate USBCAN
+
+Backend -> Backend : Parse Response
+
+Backend --> GUI : Response Data
+deactivate Backend
+
+GUI --> User : Display Response
+
+@enduml
+``
