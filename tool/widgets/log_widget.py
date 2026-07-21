@@ -4,15 +4,21 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext, filedialog
 from datetime import datetime
+from common_cfg import Common
 
+# Alias
+STATE = Common.State
+TAG   = Common.Tag
 
 class LogWidget(ttk.LabelFrame):
     _TAGS = {
-        "tx":    {"foreground": "#1a6ecc"},
-        "rx":    {"foreground": "#267326"},
-        "ver":   {"foreground": "#267326", "font": ("Courier", 9, "bold")},
-        "error": {"foreground": "red"},
-        "info":  {"foreground": "#555555"},
+        TAG.TX:   {"foreground": "#1a6ecc"},
+        TAG.RX:   {"foreground": "#267326"},
+        TAG.VER:  {"foreground": "#267326", "font": ("Courier", 9, "bold")},
+        TAG.ERR:  {"foreground": "red"},
+        TAG.WARN: {"foreground": "orange"},
+        TAG.SUC:  {"foreground": "#267326"},
+        TAG.INF:  {"foreground": "#555555"},
     }
 
     DEFAULT_FILE_EXTENSION = ".txt"
@@ -23,16 +29,16 @@ class LogWidget(ttk.LabelFrame):
         ("All Files", "*.*"),
     )
 
-    TXT_MSG_LOG     = "Message Log"
-    TXT_CLEAR_LOG   = "Clear Log"
-    TXT_SAVE_LOG    = "Save Log"
+    TXT_MSG_LOG   = "Message Log"
+    TXT_CLEAR_LOG = "Clear Log"
+    TXT_SAVE_LOG  = "Save Log"
 
     def __init__(self, parent, **kwargs) -> None:
         super().__init__(parent, text=self.TXT_MSG_LOG, padding=8, **kwargs)
         self._build_ui()
 
     def _build_ui(self) -> None:
-        self._text = scrolledtext.ScrolledText(self, height=8, state="disabled", font=("Courier", 9),)
+        self._text = scrolledtext.ScrolledText(self, height=8, state=STATE.DIS, font=("Courier", 9),)
         self._text.pack(fill=tk.BOTH, expand=True)
 
         for tag, cfg in self._TAGS.items():
@@ -48,17 +54,18 @@ class LogWidget(ttk.LabelFrame):
         clear_log_btn.pack(side=tk.LEFT)
 
     def log(self, text: str, tag: str = "info") -> None:
-        ts   = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-        line = f"[{ts}]  {text}\n"
-        self._text.config(state="normal")
+        ts = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        line = f"[{ts}] [{tag.upper()}] {text}\n"
+
+        self._text.config(state=STATE.NORM)
         self._text.insert(tk.END, line, tag)
         self._text.see(tk.END)
-        self._text.config(state="disabled")
+        self._text.config(state=STATE.DIS)
 
     def clear(self) -> None:
-        self._text.config(state="normal")
+        self._text.config(state=STATE.NORM)
         self._text.delete("1.0", tk.END)
-        self._text.config(state="disabled")
+        self._text.config(state=STATE.DIS)
 
     def save_log(self) -> None:
         file_path = filedialog.asksaveasfilename(title=self.TXT_SAVE_LOG,

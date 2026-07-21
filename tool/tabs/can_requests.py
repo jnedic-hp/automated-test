@@ -3,18 +3,23 @@
 
 import dataclasses
 import tkinter as tk
+import can
 from tkinter import ttk
 from datetime import datetime
 from typing import Callable, Optional
-import can
 
+from common_cfg import Common
 from common.can_interface import CanMessage
 from common.can_protocol import (L0_HMI_COB, L0_CB_COB, L1_OMS_COB, L1_CB_COB,
                                  L0_HMI_RequestMessages, L0_HMI_CommandMessages,
                                  L1_OMS_NotificationMessages, L1_OMS_PeriodicMessages, L1_OMS_ResponseMessages,
-                                 L1_OMS_DataMessages, L1_OMS_ResponseMessages,
+                                 L1_OMS_DataMessages,
                                  L0_CB_NotificationMessages, L0_CB_ResponseMessages,
                                  BoardVersionResponse,)
+
+# Alias
+STATE = Common.State
+TAG = Common.Tag
 
 
 _L0_MSG = [
@@ -129,6 +134,7 @@ class CanRequests:
     TEXT_NO_PARAMS = "No Parameters"
     TEXT_RESPONSE  = "No Response"
 
+
     def __init__(self, parent: ttk.Frame, bus_getter: Callable,
                  log_fn: Callable, register_rx: Callable,
                  register_rx_all: Optional[Callable] = None, **_kwargs,) -> None:
@@ -169,7 +175,7 @@ class CanRequests:
         self._can_line_combobox = ttk.Combobox(can_frame,
                                                textvariable=self._can_line_var,
                                                values=can_line_values,
-                                               state="readonly",)
+                                               state=STATE.RO,)
         self._can_line_combobox.grid(row=0, column=1, sticky="ew")
         self._can_line_combobox.bind("<<ComboboxSelected>>",
                                      lambda _: self._on_line_changed(),)
@@ -189,7 +195,7 @@ class CanRequests:
 
         self._msg_option = tk.StringVar()
 
-        self._msg_combobox = ttk.Combobox(req_frame, textvariable=self._msg_option, state="readonly",)
+        self._msg_combobox = ttk.Combobox(req_frame, textvariable=self._msg_option, state=STATE.RO,)
         self._msg_combobox.grid(row=0, column=1, sticky="ew", pady=(0, 6),)
         self._msg_combobox.bind("<<ComboboxSelected>>",
                                 lambda _: self._on_msg_changed(),)
@@ -290,8 +296,9 @@ class CanRequests:
             var = tk.StringVar(value=str(default))
             self._field_vars[field.name] = var
 
-            params_frame_entry = ttk.Entry(self._params_frame, textvariable=var, width=18)
+            params_frame_entry = ttk.Entry(self._params_frame, textvariable=var, width=10)
             params_frame_entry.grid(row=i, column=1, sticky=tk.W, pady=2)
+
 
     def _rebuild_rsp(self, request_cls) -> None:
         for w in self._rsp_data_frame.winfo_children():
@@ -324,7 +331,7 @@ class CanRequests:
                 rsp_data_frame_label = ttk.Label(self._rsp_data_frame, text=f"{field.name}:")
                 rsp_data_frame_label.grid(row=i, column=0, sticky="w", padx=(4, 8), pady=2,)
                 var = tk.StringVar(value="---")
-                rsp_data_entry = ttk.Entry(self._rsp_data_frame, textvariable=var, state="readonly", width=18)
+                rsp_data_entry = ttk.Entry(self._rsp_data_frame, textvariable=var, state=STATE.RO, width=10)
                 rsp_data_entry.grid(row=i, column=1, sticky="w", pady=2)
                 self._rsp_field_vars[field.name] = var
         else:
@@ -336,7 +343,7 @@ class CanRequests:
     def _send(self) -> None:
         bus = self._bus_getter()
         if bus is None:
-            self._log("Not Connected - Connect USB to CAN Adapter first.", tag="error")
+            self._log("Not Connected - Connect USB to CAN Adapter first.", tag=TAG.ERR)
             return
 
         cls = self._current_cls
@@ -351,7 +358,7 @@ class CanRequests:
             else:
                 msg = cls().encode()
         except Exception as exc:
-            self._log(f"Encode error: {exc}", tag="error")
+            self._log(f"Encode error: {exc}", tag=TAG.ERR)
             return
 
         raw = can.Message(arbitration_id=msg.arbitration_id,
@@ -360,7 +367,7 @@ class CanRequests:
         try:
             bus.send(raw)
         except Exception as exc:
-            self._log(f"TX error: {exc}", tag="error")
+            self._log(f"TX error: {exc}", tag=TAG.ERR)
             return
 
         name = _COB_NAME.get(msg.arbitration_id, "UNKNOWN")

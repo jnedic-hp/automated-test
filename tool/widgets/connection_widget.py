@@ -5,13 +5,18 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable, Optional
+from common_cfg import Common
 
 import can
 
+# Alias
+COLOR = Common.Color
+STATE = Common.State
+TAG = Common.Tag
+
 INTERFACE_DEFAULTS: dict[str, str] ={
-    "pcan":      "PCAN_USBBUS1",
-    "slcan":     "COM3",
     "socketcan": "can0",
+    "slcan":     "/dev/ttyUSB0",
 }
 
 BITRATES = ["125000", "250000", "500000", "1000000"]
@@ -42,17 +47,17 @@ class ConnectionWidget(ttk.LabelFrame):
         interface_label = ttk.Label(self, text=self.TXT_INTERFACE)
         interface_label.grid(row=0, column=0, sticky=tk.W, padx=4)
 
-        self.interface_var = tk.StringVar(value="pcan")
+        self.interface_var = tk.StringVar(value="socketcan")
         interface_combobox = ttk.Combobox(self, textvariable=self.interface_var,
                                           width=13,values=list(INTERFACE_DEFAULTS.keys()),
-                                          state="readonly",)
+                                          state=STATE.RO,)
         interface_combobox.grid(row=0, column=1, padx=4)
         interface_combobox.bind("<<ComboboxSelected>>", self._on_interface_changed)
 
         channel_label = ttk.Label(self, text=self.TXT_CHANNEL)
         channel_label.grid(row=0, column=2, sticky=tk.W, padx=4)
 
-        self.channel_var = tk.StringVar(value=INTERFACE_DEFAULTS["pcan"])
+        self.channel_var = tk.StringVar(value=INTERFACE_DEFAULTS["socketcan"])
 
         channel_entry = ttk.Entry(self, textvariable=self.channel_var, width=16)
         channel_entry.grid(row=0, column=3, padx=4)
@@ -63,13 +68,13 @@ class ConnectionWidget(ttk.LabelFrame):
         self.bitrate_var = tk.StringVar(value="500000")
 
         bitrate_combobox = ttk.Combobox(self, textvariable=self.bitrate_var,
-                                        width=9, values=BITRATES, state="readonly",)
+                                        width=9, values=BITRATES, state=STATE.RO,)
         bitrate_combobox.grid(row=0, column=5, padx=4)
 
         self._connect_btn = ttk.Button(self, text=self.TXT_CONNECT_BTN, command=self._toggle_connection)
         self._connect_btn.grid(row=0, column=6, padx=8)
 
-        self._status_lbl = ttk.Label(self, text=self.TXT_STATUS_DISCONNECTED, foreground="red")
+        self._status_lbl = ttk.Label(self, text=self.TXT_STATUS_DISCONNECTED, foreground=COLOR.HP_RED)
         self._status_lbl.grid(row=1, column=0, columnspan=7, sticky=tk.W, padx=4, pady=(4, 0))
 
     def bus_getter(self) -> can.BusABC | None:
@@ -103,7 +108,7 @@ class ConnectionWidget(ttk.LabelFrame):
         try:
             self._bus = can.Bus(interface=iface, channel=channel, bitrate=bitrate)
         except Exception as exc:
-            self._log_fn(f"Connection failed: {exc}", tag="error")
+            self._log_fn(f"Connection failed: {exc}", tag=TAG.ERR)
             return
 
         self._connected = True

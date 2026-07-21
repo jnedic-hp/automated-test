@@ -9,26 +9,25 @@ from tkinter import ttk
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 
+from common_cfg import Common
 from widgets.connection_widget import ConnectionWidget
 from widgets.log_widget import LogWidget
 from tabs.can_requests import CanRequests
 from tabs.flash_firmware import FlashFirmware
 
-# Add Tabs here.
+# Alias
+COLOR = Common.Color
+
+# Add Tabs here
 _TABS = [
     ("Flash Firmware", FlashFirmware),
     ("CAN Requests",  CanRequests),
 ]
 
-TXT_TOOL_NAME = "Henny Penny Tool"
-COLOR_HENNY_PENNY_RED = "#C9302C"
-COLOR_HENNY_PENNY_BLACK = "#222222"
-
-
 class HPTool:
     def __init__(self) -> None:
         self.root = tk.Tk()
-        self.root.title(TXT_TOOL_NAME)
+        self.root.title(Common.TOOL_NAME)
         self.root.resizable(True, True)
         self._build_ui()
         self._register_tabs()
@@ -46,13 +45,13 @@ class HPTool:
                 self.root.geometry(f"{w}x{h}+0+0")
 
     def _build_ui(self) -> None:
-        self.root.configure(bg=COLOR_HENNY_PENNY_RED)
+        self.root.configure(bg=COLOR.HP_RED)
 
         # Style for ttk frames
         style = ttk.Style()
-        style.configure("Outer.TFrame", background=COLOR_HENNY_PENNY_RED)
-        style.configure("Left.TFrame", background=COLOR_HENNY_PENNY_BLACK)
-        style.configure("Right.TFrame", background=COLOR_HENNY_PENNY_BLACK)
+        style.configure("Outer.TFrame", background=COLOR.HP_RED)
+        style.configure("Left.TFrame", background=COLOR.HP_BLACK)
+        style.configure("Right.TFrame", background=COLOR.HP_BLACK)
 
         # Main frame
         m_frame = ttk.Frame(self.root, padding=6, style="Outer.TFrame")
@@ -75,7 +74,7 @@ class HPTool:
         r_frame = ttk.Frame(m_frame, padding=3, style="Right.TFrame")
         r_frame.grid(row=0, column=1, sticky="nsew", padx=(3, 0))
 
-        self.nb = ttk.Notebook(r_frame)
+        self.nb = ttk.Notebook(r_frame, width=300)
         self.nb.pack(fill=tk.BOTH, expand=True)
 
     def _register_tabs(self) -> None:
