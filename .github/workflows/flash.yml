@@ -1,3 +1,4 @@
+# This will be in Platform Control Board repository, and will be used to flash the firmware to the board.
 name: Flash Firmware
 
 on:
